@@ -29,8 +29,15 @@ dependencies {
 }
 
 tasks.test {
-    //  Tell Gradle to use TestNG instead of JUnit
-    useTestNG() {
-        suites("src/test/resources/testng.xml")
+    useTestNG()  // ✅ Tells Gradle to run TestNG instead of JUnit
+
+    // Optional but helpful logging configuration
+    testLogging {
+        events("PASSED", "FAILED", "SKIPPED")
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
     }
+
+    // Optional — clear cache before running
+    outputs.upToDateWhen { false }
 }
+
