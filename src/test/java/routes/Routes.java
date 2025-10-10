@@ -1,6 +1,6 @@
 package routes;
 
-import utilities.ConfigReader;
+import utils.ConfigReader;
 
 public class Routes {
 
