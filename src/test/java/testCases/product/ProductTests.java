@@ -22,6 +22,7 @@ public class ProductTests extends BaseTest {
     /**
      * Test 1: Verify retrieving all products returns a valid list and status code 200
      */
+
     @Test(description = "Verify retrieving all products returns valid list and status code 200")
     public void verifyAllProductsAreRetrievedSuccessfully() {
 
@@ -107,7 +108,6 @@ public class ProductTests extends BaseTest {
      * - Send a GET request to /products/{id}
      * - Validate that the response returns the correct product details (ID, title, price)
      * - Ensure the response status code is 200 (OK)
-
      */
         @Test(description = "Verify retrieving a single product by valid ID returns correct details and status 200")
         public void verifyProductRetrievedByIdSuccessfully() {
@@ -156,12 +156,10 @@ public class ProductTests extends BaseTest {
 
     /**
      *  Test Case 4: Verify an existing product can be successfully updated
-     *
      * Objective:
      * - Send a put request to /products/{id}
      * - Validate that the response returns the correct updated product details (ID, title, price)
      * - Ensure the response status code is 200 (OK)
-
      */
 
         @Test(description = "Verify an existing product can be updated successfully via PUT /products/{id}")
@@ -218,6 +216,15 @@ public class ProductTests extends BaseTest {
             Assert.assertEquals(resDescription, updatedProduct.getDescription(), "Description did not update correctly.");
             Assert.assertEquals(resImage, updatedProduct.getImage(), "Image did not update correctly.");
         }
+
+     /*
+     * Test 5: Verify a product can be deleted successfully using ID
+     *  Objective:
+      * To validate that when a valid product ID is provided in a DELETE request
+      * to the /products/{id} endpoint, the API responds with a 200 status code
+      * and confirms successful deletion. Additionally, a follow-up GET request
+      * using the same product ID should indicate that the product no longer exists */
+
 
         @Test(description = "Verify a product can be deleted successfully using Id")
         public void verifyProductDeletedSuccessfully(){
