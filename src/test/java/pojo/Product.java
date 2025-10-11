@@ -1,17 +1,19 @@
 package pojo;
 
+import java.math.BigDecimal;
+
 public class Product {
 
     //Encapsulation
     private String title;
-    private double price;
+    private BigDecimal price;
     private String description;
     private String category;
     private String image;
 
     //Constructor
 
-    public Product(String title, double price, String description, String category, String image) {
+    public Product(String title, BigDecimal price, String description, String category, String image) {
         this.title = title;
         this.price = price;
         this.description = description;
@@ -28,11 +30,11 @@ public class Product {
         this.title = title;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

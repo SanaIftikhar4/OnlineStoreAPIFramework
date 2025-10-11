@@ -10,34 +10,68 @@ repositories {
 }
 
 dependencies {
-    //  Core libraries
-    testImplementation("io.rest-assured:rest-assured:5.5.0")
+
+    // ------------------------------------------------------
+    //  Core Testing Libraries
+    // ------------------------------------------------------
+
+    // Rest-Assured – main library for API testing (HTTP requests, validation, etc.)
+    implementation("io.rest-assured:rest-assured:5.5.0")
+
+    // TestNG – testing framework for running and organizing test cases
     testImplementation("org.testng:testng:7.10.2")
 
-    //  JSON parsing and validation
-    testImplementation("io.rest-assured:json-path:5.5.0")
-    testImplementation("io.rest-assured:json-schema-validator:5.5.0")
-    testImplementation("com.fasterxml.jackson.core:jackson-databind:2.17.1")
-    testImplementation("org.json:json:20240303")
 
-    //  Data faker for dynamic test data
-    testImplementation("com.github.javafaker:javafaker:1.0.2")
+    // ------------------------------------------------------
+    //  JSON Handling & Validation
+    // ------------------------------------------------------
 
-    //  Reporting
-    testImplementation("com.aventstack:extentreports:5.1.1")
-    testImplementation("io.qameta.allure:allure-testng:2.26.0")
+    // JSONPath – used internally by RestAssured to extract data from JSON
+    implementation("io.rest-assured:json-path:5.5.0")
+
+    // JSON Schema Validator – helps validate API response structure
+    implementation("io.rest-assured:json-schema-validator:5.5.0")
+
+    // Jackson Databind – powerful JSON serialization/deserialization library (used with POJOs)
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.17.1")
+
+    // org.json – lightweight JSON parsing (optional but useful for manual validation)
+    implementation("org.json:json:20240303")
+
+
+    // ------------------------------------------------------
+    //  Dynamic Test Data Generation
+    // ------------------------------------------------------
+
+    // DataFaker – generates realistic random data (names, prices, categories, etc.)
+    // use this if upgraded to net.datafaker (recommended modern version)
+    implementation("net.datafaker:datafaker:2.4.1")
+
+    // OR — if  using the classic Java Faker library:
+    //implementation("com.github.javafaker:javafaker:1.0.2")
+
+
+    // ------------------------------------------------------
+    //  Reporting Libraries
+    // ------------------------------------------------------
+
+    // Extent Reports – for HTML test reports with visual charts and logs
+    implementation("com.aventstack:extentreports:5.1.1")
+
+    // Allure TestNG – integrates Allure reporting with TestNG
+    implementation("io.qameta.allure:allure-testng:2.26.0")
 }
 
-tasks.test {
-    useTestNG()  // ✅ Tells Gradle to run TestNG instead of JUnit
 
-    // Optional but helpful logging configuration
+tasks.test {
+    useTestNG()  // ✅ Run TestNG tests instead of JUnit
+
+    // Optional but recommended: better visibility in test logs
     testLogging {
         events("PASSED", "FAILED", "SKIPPED")
         exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
     }
 
-    // Optional — clear cache before running
+    // Optional — ensures tests always run (no Gradle caching)
     outputs.upToDateWhen { false }
 }
-

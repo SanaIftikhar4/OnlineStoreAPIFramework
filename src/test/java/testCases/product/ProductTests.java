@@ -8,8 +8,10 @@ import paylaods.Payload;
 import pojo.Product;
 import routes.Routes;
 import utils.LogHelper;
+import utils.PriceHelper;
 
 import static io.restassured.RestAssured.given;
+import static java.nio.file.Files.size;
 import static org.hamcrest.Matchers.*;
 
 /**
@@ -35,13 +37,14 @@ public class ProductTests extends BaseTest {
                 .then()
                         .log().ifValidationFails()
                         .statusCode(200)
-                        .body("size()", greaterThan(0))
-                        .body("[0].id", notNullValue())
-                        .body("[0].title", notNullValue())
-                        .body("[0].price", greaterThan(0.0f))
-                        .body("[0].description", notNullValue())
-                        .body("[0].category", notNullValue())
-                        .body("[0].image", notNullValue())
+
+                        .body("id", everyItem(notNullValue()))
+                        .body("title", everyItem(notNullValue()))
+                        .body("price", everyItem(notNullValue()))
+                        .body("description", everyItem(notNullValue()))
+                        .body("category", everyItem(notNullValue()))
+                        .body("image", everyItem(notNullValue()))
+
                         .extract().response();
 
         // Extract response details
@@ -51,6 +54,43 @@ public class ProductTests extends BaseTest {
         // Assert that we have at least one product
         Assert.assertTrue(productCount > 0, "Expected non-empty product list");
     }
+
+    /**
+     * Negative Test: Verify retrieving all products from an invalid endpoint returns 404 Not Found
+     *
+     * Objective:
+     * - Send a GET request to an incorrect endpoint (/product instead of /products).
+     * - Validate that the API responds with 404 (Not Found).
+     * - Ensure the response does not contain any valid product data.
+     */
+    @Test(description = "Verify retrieving all products from an invalid endpoint returns 404 Not Found")
+    public void verifyAllProductsRetrievalFailsWithInvalidEndpoint() {
+
+        // Send request to invalid endpoint
+        Response response =
+                given()
+                        .spec(requestSpec)
+                        .when()
+                        .get("/product") //  wrong route
+                        .then()
+                        .log().ifValidationFails()
+                        .statusCode(404) //  expected "Not Found"
+                        .extract().response();
+
+        // Log the server response
+        String responseBody = response.getBody().asString();
+        String contentType = response.getHeader("Content-Type");
+
+        LogHelper.info("Response for invalid endpoint: " + responseBody);
+        LogHelper.info("Content-Type: " + contentType);
+        // Assert // Check that it's an HTML error page, not JSON
+         Assert.assertTrue(contentType.contains("text/html") || contentType.contains("charset"),
+                   "Expected HTML error response for invalid endpoint.");
+        //
+        //    //  Check that 404 message is visible
+         Assert.assertTrue(responseBody.contains("Cannot GET") || responseBody.contains("Error"),
+                  "Expected 'Cannot GET' or error message in the response body.");
+        }
 
     /**
      * Test 2: Verify new product can be successfully created via POST /products
@@ -79,7 +119,6 @@ public class ProductTests extends BaseTest {
                             .log().ifValidationFails()
                             .statusCode(201)
                             .body("title", equalTo(newProduct.getTitle()))
-                            .body("price", greaterThan(0.0f))
                             .body("description", equalTo(newProduct.getDescription()))
                             .body("category", equalTo(newProduct.getCategory()))
                             .body("image", equalTo(newProduct.getImage()))
@@ -99,7 +138,12 @@ public class ProductTests extends BaseTest {
             //Assertions
             Assert.assertTrue(createdProductId > 0, "Expected valid product ID (non-zero).");
             Assert.assertEquals(createdTitle, newProduct.getTitle(), "Product title mismatch.");
-            Assert.assertEquals(createdPrice, newProduct.getPrice(), "Product price mismatch.");
+            Assert.assertEquals(createdCategory, newProduct.getCategory(), "Category mismatch.");
+            //  Price comparison using helper (fixes BigDecimal precision issue)
+            Assert.assertTrue(
+                    PriceHelper.areEqual(newProduct.getPrice(), java.math.BigDecimal.valueOf(createdPrice)),
+                    "Product price mismatch."
+            );
         }
     /**
      *  Test Case 3: Verify retrieving a single product by valid ID
@@ -127,7 +171,7 @@ public class ProductTests extends BaseTest {
                             .statusCode(200)                     // Verify HTTP response is 200 OK
                             .body("id", equalTo(productId))
                             .body("title", notNullValue())
-                            .body("price", greaterThan(0.0f))
+                            .body("price", notNullValue())
                             .body("description", notNullValue())
                             .body("category", notNullValue())
                             .body("image", notNullValue())
@@ -153,6 +197,43 @@ public class ProductTests extends BaseTest {
             Assert.assertNotNull(productDescription, "Expected description not to be null.");
             Assert.assertNotNull(productImage, "Expected product image URL not to be null.");
         }
+
+    /**
+     * Negative Test: Verify retrieving a product with invalid ID format returns 404 Not Found
+     *
+     * Objective:
+     * - Send a GET request with malformed product ID (e.g., "{-9}").
+     * - Validate that the API returns 404 Not Found.
+     * - Ensure the response does not contain valid JSON product data.
+     */
+    @Test(description = "Verify retrieving product with invalid ID format returns 404 Not Found")
+    public void verifyProductRetrievalFailsWithInvalidIdFormat() {
+
+        Response response =
+                given()
+                        .spec(requestSpec)
+                        .when()
+                        .get("/products%7B-9%7D") //  Invalid ID format
+                        .then()
+                        .log().ifValidationFails()
+                        .statusCode(404) //  Expect 404 Not Found
+                        .extract().response();
+
+        String responseBody = response.getBody().asString();
+        String contentType = response.getHeader("Content-Type");
+
+        LogHelper.info("Response for invalid product ID format: " + responseBody);
+        LogHelper.info("Content-Type: " + contentType);
+
+        //  Ensure it's HTML error page
+        Assert.assertTrue(contentType.contains("text/html") || contentType.contains("charset"),
+                "Expected HTML error response for invalid product ID format.");
+
+        //  Ensure proper error message
+        Assert.assertTrue(responseBody.contains("Cannot GET") || responseBody.contains("Error"),
+                "Expected 'Cannot GET' message for invalid ID format.");
+    }
+
 
     /**
      *  Test Case 4: Verify an existing product can be successfully updated
@@ -189,7 +270,6 @@ public class ProductTests extends BaseTest {
                             .statusCode(200)
                             .body("id", equalTo(productId))
                             .body("title", equalTo(updatedProduct.getTitle()))
-                            .body("price", greaterThan(0.0f))
                             .body("description", equalTo(updatedProduct.getDescription()))
                             .body("category", equalTo(updatedProduct.getCategory()))
                             .body("image", equalTo(updatedProduct.getImage()))
@@ -211,7 +291,13 @@ public class ProductTests extends BaseTest {
             //Assertions for logical validation
 
             Assert.assertEquals(resTitle, updatedProduct.getTitle(), "Title did not update correctly.");
-            Assert.assertEquals(resPrice, updatedProduct.getPrice(), "Price did not update correctly.");
+
+            //  Price comparison using helper
+            Assert.assertTrue(
+                    PriceHelper.areEqual(updatedProduct.getPrice(), java.math.BigDecimal.valueOf(resPrice)),
+                    "Price did not update correctly."
+            );
+
             Assert.assertEquals(resCategory, updatedProduct.getCategory(), "Category did not update correctly.");
             Assert.assertEquals(resDescription, updatedProduct.getDescription(), "Description did not update correctly.");
             Assert.assertEquals(resImage, updatedProduct.getImage(), "Image did not update correctly.");

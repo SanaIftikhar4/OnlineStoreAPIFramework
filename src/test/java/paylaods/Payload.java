@@ -1,7 +1,7 @@
 package paylaods;
-import com.github.javafaker.Faker;
 import pojo.Product;
-
+import net.datafaker.Faker;
+import java.math.BigDecimal;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -18,7 +18,8 @@ public final class Payload {
     public static Product productPayload(){
 
         String title = faker.commerce().productName();
-        double price = faker.number().randomDouble(2, 1, 1000);
+        BigDecimal price = BigDecimal.valueOf(faker.number().randomDouble(2, 1, 1000));
+
         String description = faker.lorem().sentence();
         String image = "https://i.pravatar.cc/300";
 
