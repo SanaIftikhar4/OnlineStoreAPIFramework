@@ -1,0 +1,30 @@
+[
+  {
+    "title": "",
+    "price": 199.99,
+    "description": "Title missing — should trigger validation error.",
+    "category": "Appliances",
+    "image": "https://example.com/images/invalid1.jpg"
+  },
+  {
+    "title": "Negative Price Lamp",
+    "price": -49.99,
+    "description": "Price cannot be negative.",
+    "category": "Furniture",
+    "image": "https://example.com/images/invalid2.jpg"
+  },
+  {
+    "title": "Invalid Category Product",
+    "price": 299.99,
+    "description": "Category not recognized by schema.",
+    "category": "UnknownCategory",
+    "image": "https://example.com/images/invalid3.jpg"
+  },
+  {
+    "title": "Missing Image Product",
+    "price": 89.99,
+    "description": "Image URL is missing.",
+    "category": "Clothing",
+    "image": ""
+  }
+]

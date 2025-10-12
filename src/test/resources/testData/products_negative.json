@@ -1,0 +1,30 @@
+[
+  {
+    "title": "Smart Refrigerator",
+    "price": 899.99,
+    "description": "High-efficiency smart refrigerator with WiFi control.",
+    "category": "Appliances",
+    "image": "https://example.com/images/fridge.jpg"
+  },
+  {
+    "title": "Luxury Sofa Set",
+    "price": 1250.00,
+    "description": "Modern 3-seater leather sofa with ergonomic design.",
+    "category": "Furniture",
+    "image": "https://example.com/images/sofa.jpg"
+  },
+  {
+    "title": "Men's Winter Jacket",
+    "price": 149.49,
+    "description": "Waterproof insulated jacket suitable for extreme cold.",
+    "category": "Clothing",
+    "image": "https://example.com/images/jacket.jpg"
+  },
+  {
+    "title": "Mountain Bike",
+    "price": 599.99,
+    "description": "21-speed aluminum mountain bike with dual suspension.",
+    "category": "Sports/Outdoor",
+    "image": "https://example.com/images/mountainbike.jpg"
+  }
+]

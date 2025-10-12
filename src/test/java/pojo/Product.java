@@ -12,7 +12,9 @@ public class Product {
     private String image;
 
     //Constructor
-
+// ✅ Default (no-args) constructor — REQUIRED for Jackson
+    public Product() {
+    }
     public Product(String title, BigDecimal price, String description, String category, String image) {
         this.title = title;
         this.price = price;

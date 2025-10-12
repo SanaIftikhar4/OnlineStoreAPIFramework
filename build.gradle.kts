@@ -1,5 +1,10 @@
+
+
 plugins {
     id("java")
+    id ("io.qameta.allure") version "2.11.2"
+
+
 }
 
 group = "com.api"
@@ -60,6 +65,12 @@ dependencies {
 
     // Allure TestNG – integrates Allure reporting with TestNG
     implementation("io.qameta.allure:allure-testng:2.26.0")
+    testImplementation("io.qameta.allure:allure-rest-assured:2.26.0")
+}
+allure {
+    version = "2.26.0"
+    autoconfigure = true
+    aspectjweaver = true
 }
 
 
