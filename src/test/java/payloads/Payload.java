@@ -1,6 +1,7 @@
-package paylaods;
-import pojo.Product;
+package payloads;
+import pojo.*;
 import net.datafaker.Faker;
+
 import java.math.BigDecimal;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -15,6 +16,7 @@ public final class Payload {
     //create random class so our data can pick randomly from our options
     private static Random random = new Random();
 
+    ////Product Module
     public static Product productPayload(){
 
         String title = faker.commerce().productName();
@@ -41,4 +43,40 @@ public final class Payload {
         return new Product(title,price,description,category,image);
 
     }
+
+    //User Module
+    public static Users usersPayload(){
+
+        //Name
+        String firstName = faker.name().firstName();
+        String lastName = faker.name().lastName();
+
+        Name name = new Name(firstName,lastName); // Object for Name
+
+        //GeoLocation:
+        String lat = faker.address().latitude();
+        String lng = faker.address().longitude();
+
+        Geolocation geolocation = new Geolocation(lat,lng);
+
+        //Address
+
+        String city = faker.address().city();
+        String street =faker.address().streetName();
+        int number = faker.number().numberBetween(1, 9999);
+        String zipcode= faker.address().zipCode();
+
+        Address address = new Address(city,street,number,zipcode,geolocation);
+
+        String email = faker.internet().emailAddress();
+        String username = faker.internet().username();
+        String password = faker.internet().password();
+        String phonenumber = faker.phoneNumber().cellPhone();
+        return new Users(email,username,password,name,address,phonenumber);
+
+
+
+    }
+
+
 }

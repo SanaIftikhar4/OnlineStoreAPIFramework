@@ -1,1 +1,0 @@
-{"uuid":"467c5e4c-a819-467f-955c-2cbe3c1319de","name":"E-Commerce API Test Suite","children":["20527426-49f3-436f-8e02-0a09382b1530"],"befores":[],"afters":[{"name":"tearDown","status":"passed","stage":"finished","description":"","steps":[],"attachments":[],"parameters":[],"start":1760234023881,"stop":1760234023904}],"start":1760234017460,"stop":1760234023905}

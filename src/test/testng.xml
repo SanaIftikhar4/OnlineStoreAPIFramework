@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="E-Commerce API Test Suite" parallel="false">
-    
+<suite name="E-Commerce API Test Suite" thread-count="2" parallel="tests">
+
+    <!--  Listener for Extent Reports -->
     <listeners>
-        <listener class-name="utils.ExtentReporter"></listener>
+        <listener class-name="utils.ExtentReporter" />
     </listeners>
 
+    <!--  Product Module Tests -->
     <test name="Product API Tests">
         <classes>
-            <class name="testCases.product.ProductTests"/>
-            <class name="testCases.product.ProductDataDrivenTesting"/>
+            <class name="testCases.product.ProductTests" />
+            <class name="testCases.product.ProductDataDrivenTesting" />
         </classes>
     </test>
+
+    <!--  Users Module Tests -->
+    <test name="Users API Tests">
+        <classes>
+            <class name="testCases.users.UserTests" />
+        </classes>
+    </test>
+
 </suite>

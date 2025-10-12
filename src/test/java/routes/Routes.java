@@ -35,16 +35,29 @@ public class Routes {
 
     //------------------------Users-----------------------
 
-    //Get all users--> Retrieve a list of all users.
-    public static final String get_allusers = "/users";
-    //Add a new user --> Create a new user.
-    public static final String post_newUser = "/users";
-    //Get a single user --> Retrieve details of a specific user by ID.
+    // Get all users --> Retrieve a list of all users.
+    public static final String get_allUsers = "/users";
+
+    // Get all users (limited) --> Retrieve a limited number of users.
+    public static final String get_allUsers_Limit = "/users?limit={limit}";
+
+    // Get all users (sorted) --> Retrieve users in ascending or descending order.
+    public static final String get_allUsers_Sorted = "/users?sort={order}"; // order = asc | desc
+
+    // Get a single user --> Retrieve details of a specific user by ID.
     public static final String get_userById = "/users/{id}";
-    //Update a user --> Update an existing user by ID.
+
+        // Add a new user --> Create a new user.
+    public static final String post_newUser = "/users";
+
+    // Update a user --> Update an existing user by ID (PUT replaces all fields).
     public static final String put_updateUserById = "/users/{id}";
-    //Delete a user -- > Delete a specific user by ID.
-    public static final String delete_userById ="/users/{id}";
+
+    // Partially update a user --> Update specific user fields (PATCH).
+    public static final String patch_updateUserById = "/users/{id}";
+
+    // Delete a user --> Delete a specific user by ID.
+    public static final String delete_userById = "/users/{id}";
 
     //----------------AUTH Login--------------------
 

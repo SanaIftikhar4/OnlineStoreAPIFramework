@@ -4,14 +4,13 @@ import base.BaseTest;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import paylaods.Payload;
+import payloads.Payload;
 import pojo.Product;
 import routes.Routes;
 import utils.LogHelper;
 import utils.PriceHelper;
 
 import static io.restassured.RestAssured.given;
-import static java.nio.file.Files.size;
 import static org.hamcrest.Matchers.*;
 
 /**
