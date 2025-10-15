@@ -1,5 +1,7 @@
 package testCases.users;
 import base.BaseTest;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -17,6 +19,8 @@ import base.BaseTest;
 
 import java.util.List;
 
+@Epic("E-Commerce REST API Testing")
+@Feature("User Module - CRUD Operations")
 public class UserTests extends BaseTest {
 
     // Test 1: To Validates that API successfully returns the complete list of users
@@ -195,6 +199,7 @@ public class UserTests extends BaseTest {
 
         Assert.assertTrue(response.asString().contains("id"), "User delete response invalid!");
     }
+
 
 
 

@@ -72,11 +72,13 @@ allure {
     autoconfigure = true
     aspectjweaver = true
 }
-
+tasks.register<Delete>("cleanReports") {
+    delete("build", "allure-results", "allure-report")
+}
 
 tasks.test {
     useTestNG()  // ✅ Run TestNG tests instead of JUnit
-
+    finalizedBy("cleanReports")
     // Optional but recommended: better visibility in test logs
     testLogging {
         events("PASSED", "FAILED", "SKIPPED")

@@ -1,6 +1,8 @@
 package testCases.product;
 
 import base.BaseTest;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -18,6 +20,9 @@ import static org.hamcrest.Matchers.*;
  * Contains test cases related to the Products module.
  * Each test validates API behavior for different operations like GET ,POST ,PUT and DELETE.
  */
+
+@Epic("E-Commerce REST API Testing")
+@Feature("Product Module - CRUD Operations")
 public class ProductTests extends BaseTest {
 
     /**

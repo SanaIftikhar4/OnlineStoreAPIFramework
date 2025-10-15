@@ -62,7 +62,7 @@ public class Routes {
     //----------------AUTH Login--------------------
 
     //Login --> Authenticate a user.
-    public static final String auth = "/auth/login";
+    public static final String post_auth = "/auth/login";
 
 
 

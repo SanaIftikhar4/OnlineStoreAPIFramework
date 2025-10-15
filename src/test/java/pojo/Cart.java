@@ -5,13 +5,19 @@ import java.util.List;
 public class Cart {
 
     private int userId;
-    private List<Product> products;
+    private String date;
+    private List<ProductItems> products;
+
+
+
 
 
     //Constructor
+    public Cart() {}
 
-    public Cart(int userId, List<Product> products) {
+    public Cart(int userId, String date, List<ProductItems> products) {
         this.userId = userId;
+        this.date=date;
         this.products = products;
     }
 
@@ -25,17 +31,21 @@ public class Cart {
         this.userId = userId;
     }
 
-    public List<Product> getProducts() {
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public List<ProductItems> getProducts() {
         return products;
     }
 
-    public void setProducts(List<Product> products) {
+    public void setProducts(List<ProductItems> products) {
         this.products = products;
     }
-
-
-
-
-
 
 }

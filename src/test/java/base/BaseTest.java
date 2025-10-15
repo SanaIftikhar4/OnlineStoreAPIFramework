@@ -30,6 +30,9 @@ public class BaseTest {
     // Defines a reusable RestAssured RequestSpecification
     protected static RequestSpecification requestSpec;
 
+    protected static final String SCHEMA_PATH = "schemas/";
+
+
     /**
      * @BeforeClass - Runs once before any test methods in this class.
      * Initializes base URI, logging, and reusable request specification.
