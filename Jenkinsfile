@@ -14,13 +14,19 @@ pipeline {
 
         stage('Build & Test') {
             steps {
-                bat './gradlew clean test --no-daemon'
+                //bat './gradlew clean test --no-daemon'
+                bat 'gradlew clean test --no-daemon'
             }
         }
 
         stage('Generate Reports') {
             steps {
-                bat './gradlew allureReport || echo "Allure plugin not configured"'
+               // bat './gradlew allureReport || echo "Allure plugin not configured"'
+            script {
+                                // Try to generate Allure reports if configured
+                                bat 'gradlew allureReport || echo "Allure task not found, skipping Allure report generation."'
+                            }
+
             }
         }
 
