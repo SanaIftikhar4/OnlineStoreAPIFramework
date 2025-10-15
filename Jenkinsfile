@@ -6,29 +6,37 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout') { //Checkout source code from GitHub
             steps {
                 git branch: 'master', url: 'https://github.com/SanaIftikhar4/OnlineStoreAPIFramework.git'
             }
         }
 
-        stage('Build & Test') {
+         stage('Clean Workspace') { //Clean workspace BEFORE build (not after)
+                    steps {
+                        bat 'gradlew cleanReports --no-daemon || echo "Skipping locked files..."'
+                    }
+                }
+
+        stage('Build & Test') { //Build & run API tests
             steps {
                 bat 'gradlew clean test --no-daemon'
             }
         }
 
-        stage('Generate Allure Report') {
+        stage('Generate Allure Report') { //Generate Allure report
             steps {
-                bat 'gradlew allureReport'
+                bat 'gradlew allureReport || echo "Allure plugin not configured"'
             }
         }
 
-        stage('Archive Results') {
+        stage('Archive Results') { //Archive results for Jenkins artifacts
             steps {
                 archiveArtifacts artifacts: 'build/reports/**/*.*', allowEmptyArchive: true
             }
         }
+
+
     }
 
     post {

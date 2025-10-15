@@ -1,3 +1,5 @@
+import java.nio.file.Files
+import java.nio.file.Paths
 
 
 plugins {
@@ -73,9 +75,32 @@ dependencies {
     testImplementation("io.qameta.allure:allure-rest-assured:2.26.0")
 }
 
-tasks.register<Delete>("cleanReports") {
-    delete("build", "allure-results", "allure-report")
-}
+        tasks.register("cleanReports") {
+            doLast {
+                val dirsToDelete = listOf("build", "allure-results", "allure-report")
+                dirsToDelete.forEach { dir ->
+                    val path = Paths.get(project.projectDir.path, dir)
+                    if (Files.exists(path)) {
+                        var attempts = 0
+                        var deleted = false
+                        while (!deleted && attempts < 3) {
+                            try {
+                                project.delete(path)
+                                deleted = true
+                                println("🧹 Deleted $dir successfully.")
+                            } catch (e: Exception) {
+                                attempts++
+                                println("⚠️ Attempt $attempts to delete $dir failed. Retrying in 2 seconds...")
+                                Thread.sleep(2000)
+                            }
+                        }
+                        if (!deleted) {
+                            println("❌ Could not delete $dir after 3 attempts. It may be locked by another process.")
+                        }
+                    }
+                }
+            }
+        }
 
 tasks.test {
 
