@@ -1,0 +1,38 @@
+Users
+fields:
+{
+    id:20,
+    email:String,
+    username:String,
+    password:String,
+    name:{
+        firstname:String,
+        lastname:String
+        },
+    address:{
+    city:String,
+    street:String,
+    number:Number,
+    zipcode:String,
+    geolocation:{
+        lat:String,
+        long:String
+        }
+    },
+    phone:String
+}
+GET:
+
+/users (get all users)
+/users/1 (get specific user based on id)
+/users?limit=5 (limit return results )
+/users?sort=desc (asc|desc get users in ascending or descending orders (default to asc))
+POST:
+
+/users
+PUT,PATCH:
+
+/users/1
+DELETE:
+
+/users/1

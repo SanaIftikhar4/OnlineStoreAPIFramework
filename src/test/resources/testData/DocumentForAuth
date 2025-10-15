@@ -1,0 +1,9 @@
+Auth
+fields:
+{
+    username:String,
+    password:String
+}
+POST:
+
+/auth/login
