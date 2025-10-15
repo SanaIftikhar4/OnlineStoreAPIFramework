@@ -29,6 +29,16 @@ pipeline {
                 bat 'gradlew allureReport || echo "Allure plugin not configured"'
             }
         }
+                stage('Allure Results') {
+                    steps {
+                        allure([
+                            includeProperties: false,
+                            jdk: '',
+                            results: [[path: 'allure-results']]
+                        ])
+                    }
+                }
+
 
         stage('Archive Results') { //Archive results for Jenkins artifacts
             steps {

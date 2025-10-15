@@ -77,7 +77,8 @@ dependencies {
 
         tasks.register("cleanReports") {
             doLast {
-                val dirsToDelete = listOf("build", "allure-results", "allure-report")
+                val dirsToDelete = listOf("build", "allure-report") //KEEP allure-results for Jenkins
+                //val dirsToDelete = listOf("build", "allure-results", "allure-report")
                 dirsToDelete.forEach { dir ->
                     val path = Paths.get(project.projectDir.path, dir)
                     if (Files.exists(path)) {
