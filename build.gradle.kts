@@ -2,9 +2,14 @@
 
 plugins {
     id("java")
-    id ("io.qameta.allure") version "2.11.2"
+    id("io.qameta.allure") version "2.11.2"
 
 
+}
+allure {
+    version = "2.26.0"
+    autoconfigure = true
+    aspectjweaver = true
 }
 
 group = "com.api"
@@ -67,19 +72,24 @@ dependencies {
     implementation("io.qameta.allure:allure-testng:2.26.0")
     testImplementation("io.qameta.allure:allure-rest-assured:2.26.0")
 }
-allure {
-    version = "2.26.0"
-    autoconfigure = true
-    aspectjweaver = true
-}
+
 tasks.register<Delete>("cleanReports") {
     delete("build", "allure-results", "allure-report")
 }
 
 tasks.test {
-    useTestNG()  // ✅ Run TestNG tests instead of JUnit
-    finalizedBy("cleanReports")
+
+    dependsOn("cleanReports")  // clean first
+
+    useTestNG {
+        suites("src/test/resources/testng.xml") //  Path to TestNG suite file
+    }  //  Run TestNG tests instead of JUnit
+
+
+    finalizedBy("allureReport")//generates Allure report after tests.
+
     // Optional but recommended: better visibility in test logs
+
     testLogging {
         events("PASSED", "FAILED", "SKIPPED")
         exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
