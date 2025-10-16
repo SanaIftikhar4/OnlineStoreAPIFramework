@@ -8,9 +8,10 @@ import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import pojo.Product;
+import routes.Routes;
 import utils.ProductDataProvider;
 
-@Epic("E-Commerce REST API Testing")
+@Epic("Fake Store REST API Testing ===> Product Testing DDT")
 @Feature("Product Module - Data Driven Testing")
 public class ProductDataDrivenTesting extends BaseTest {
     @Test(dataProvider = "positiveProductData", dataProviderClass = ProductDataProvider.class)
@@ -22,7 +23,7 @@ public class ProductDataDrivenTesting extends BaseTest {
                         .spec(requestSpec)
                         .body(product)
                         .when()
-                        .post("/products")
+                        .post(Routes.post_newProduct)
                         .then()
                         .log().ifValidationFails()
                         .statusCode(201)

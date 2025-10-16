@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="E-Commerce API Test Suite" thread-count="2" parallel="tests">
+    <listeners>
+        <listener class-name="utils.ExtentReporter" />
+
+       <listener class-name="io.qameta.allure.testng.AllureTestNg" />
+
+    </listeners>
+
+    <test name="Product API Tests">
+        <classes>
+            <class name="testCases.product.ProductTests" />
+            <class name="testCases.product.ProductDataDrivenTesting" />
+        </classes>
+    </test>
+
+    <test name="Users API Tests">
+        <classes>
+            <class name="testCases.users.UserTests" />
+        </classes>
+    </test>
+
+    <test name="Cart API Tests">
+        <classes>
+            <class name="testCases.cart.CartTest" />
+        </classes>
+    </test>
+
+    <test name="Auth API Tests">
+        <classes>
+            <class name="testCases.auth.LoginTest" />
+        </classes>
+    </test>
+
+    <test name="Schema Validation Tests">
+        <classes>
+            <class name="testCases.schema.ProductSchemaTest" />
+            <class name="testCases.schema.UserSchemaTest" />
+            <class name="testCases.schema.CartSchemaTests" />
+        </classes>
+    </test>
+</suite>

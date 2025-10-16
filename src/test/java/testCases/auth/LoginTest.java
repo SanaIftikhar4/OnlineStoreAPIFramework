@@ -15,9 +15,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static payloads.Payload.authPayload;
 
-@Epic("E-Commerce REST API Testing")
+@Epic("Fake Store REST API Testing ===> Auth Test Cases")
 @Feature("Auth Module")
-
 public class LoginTest extends BaseTest {
 
     @Test(description = "Login using invalid credentials")

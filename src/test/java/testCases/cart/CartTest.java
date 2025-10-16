@@ -16,7 +16,7 @@ import static org.hamcrest.Matchers.*;
 import static payloads.Payload.cartPayload;
 
 
-@Epic("E-Commerce REST API Testing")
+@Epic("Fake Store REST API Testing ===> Cart Test Cases")
 @Feature("Cart Module - CRUD Operations")
 public class CartTest extends BaseTest {
 

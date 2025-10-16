@@ -7,6 +7,7 @@ import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.specification.RequestSpecification;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import routes.Routes;
 import utils.ConfigReader;
 import utils.LogHelper;
@@ -37,7 +38,7 @@ public class BaseTest {
      * @BeforeClass - Runs once before any test methods in this class.
      * Initializes base URI, logging, and reusable request specification.
      */
-    @BeforeClass
+    @BeforeMethod(alwaysRun = true)
     public void setUp() throws FileNotFoundException {
 
         // Load configuration

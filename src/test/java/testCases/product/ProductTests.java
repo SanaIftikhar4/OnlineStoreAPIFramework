@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.*;
  * Each test validates API behavior for different operations like GET ,POST ,PUT and DELETE.
  */
 
-@Epic("E-Commerce REST API Testing")
+@Epic("Fake Store REST API Testing ===> Product Testing")
 @Feature("Product Module - CRUD Operations")
 public class ProductTests extends BaseTest {
 
