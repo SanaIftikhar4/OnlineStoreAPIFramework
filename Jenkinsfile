@@ -2,7 +2,8 @@ pipeline {
     agent any
 
     tools {
-        jdk 'Java'             // Make sure you have a JDK configured in Jenkins (Manage Jenkins → Global Tool Configuration)
+        jdk 'Java'            // matches the JDK name configured in Jenkins
+        allure 'Allure'       // matches the Allure Commandline name you added in Jenkins Tools
     }
 
     stages {
@@ -14,34 +15,32 @@ pipeline {
 
         stage('Build & Test') {
             steps {
-                //bat './gradlew clean test --no-daemon'
                 bat 'gradlew clean test --no-daemon'
             }
         }
 
-        stage('Generate Reports') {
+        stage('Allure Report') {
             steps {
-            script {
-                       // Try to generate Allure reports if configured
-                       bat 'gradlew allureReport || echo "Allure task not found, skipping Allure report generation."'
-                     }
-
+                // Publish the Allure results
+                allure([
+                    includeProperties: false,
+                    jdk: '',
+                    results: [[path: 'build/allure-results']]
+                ])
             }
         }
 
- stage('Archive Results') { //Archive results for Jenkins artifacts
+        stage('Archive Results') {
             steps {
                 archiveArtifacts artifacts: 'build/reports/**/*.*', allowEmptyArchive: true
             }
         }
-
-
     }
-
 
     post {
         always {
-            echo 'Pipeline completed.'
+            echo '✅ Pipeline completed. Cleaning up workspace...'
+            cleanWs()
         }
     }
 }
