@@ -5,9 +5,7 @@ import io.restassured.RestAssured;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.specification.RequestSpecification;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.*;
 import routes.Routes;
 import utils.ConfigReader;
 import utils.LogHelper;
@@ -24,7 +22,7 @@ import java.util.List;
  * Every test class (like ProductTests, CartTests) extends this BaseTest.
  */
 public class BaseTest {
-
+    private static final ThreadLocal<RequestSpecification> requestSpecThreadLocal = new ThreadLocal<>();
     // Loads config.properties values (base URL, contentType, etc.)
     protected static ConfigReader configReader;
 
@@ -33,38 +31,50 @@ public class BaseTest {
 
     protected static final String SCHEMA_PATH = "schemas/";
 
-
+    /**
+     * Initializes configuration, base URI, and thread-safe request specification.
+     * Runs once per test class.
+     */
     /**
      * @BeforeClass - Runs once before any test methods in this class.
      * Initializes base URI, logging, and reusable request specification.
      */
-    @BeforeMethod(alwaysRun = true)
+    @BeforeClass(alwaysRun = true)
     public void setUp() throws FileNotFoundException {
 
         // Load configuration
         configReader = new ConfigReader();
-        RestAssured.baseURI = Routes.base_URL;
+
+        //Fetch baseURL dynamically from config.properties
+        RestAssured.baseURI = configReader.getProperty("baseURL");
+
+
         LogHelper.info("✅ Base URI set to: " + RestAssured.baseURI);
 
         // Ensure /logs directory exists and log file ready
-        File logFile = new File("logs/test_log.log");
+        File logFile = new File("logs/" + this.getClass().getSimpleName() + "_log.log");
         logFile.getParentFile().mkdirs();
         PrintStream logStream = new PrintStream(new FileOutputStream(logFile, true), true);
 
-        // Attach request and response logging filters
         RestAssured.filters(
                 new RequestLoggingFilter(logStream),
                 new ResponseLoggingFilter(logStream)
         );
 
         // Read types from config.properties for flexibility
-        requestSpec = RestAssured.given()
+         requestSpec = RestAssured.given()
                 .contentType(configReader.getProperty("contentType"))
-                .accept(configReader.getProperty("acceptType"));
+                .accept(configReader.getProperty("acceptType"))
+                .filter(new RequestLoggingFilter())
+                .filter(new ResponseLoggingFilter());
 
-        LogHelper.info("🧩 Request spec initialized with Content-Type: "
-                + configReader.getProperty("contentType")
-                + " | Accept: " + configReader.getProperty("acceptType"));
+
+        requestSpecThreadLocal.set(requestSpec);
+
+
+    }
+    protected RequestSpecification getRequestSpec() {
+        return requestSpecThreadLocal.get();
     }
 
     /**
@@ -72,14 +82,18 @@ public class BaseTest {
      * Ensures cleanup of log streams and RestAssured sessions.
      * This prevents file-locking issues during Gradle clean.
      */
-    @AfterSuite
-    public void tearDown() {
+    @AfterClass(alwaysRun = true)
+    public void cleanUp() {
+        requestSpecThreadLocal.remove();
+        LogHelper.info("🧹 Cleaned up thread-local resources for " + this.getClass().getSimpleName());
+    }
+
+    @AfterSuite(alwaysRun = true)
+    public void finalTearDown() {
         try {
-            LogHelper.info("🧹 Test execution completed. Releasing all resources...");
-            LogHelper.close();       // ✅ Closes the log file properly
-            RestAssured.reset();     // ✅ Clears any static config and sessions
-            System.gc();             // ✅ Suggests garbage collection to free file handles
-            System.out.println("✅ Log resources released and environment reset.");
+            LogHelper.info("📦 Suite execution completed. Closing log files only...");
+            LogHelper.close();
+            System.out.println("✅ Log files closed. RestAssured state preserved.");
         } catch (Exception e) {
             e.printStackTrace();
         }

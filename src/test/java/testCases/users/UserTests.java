@@ -16,6 +16,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 import base.BaseTest;
+import utils.ConfigReader;
 
 import java.util.List;
 
@@ -185,7 +186,13 @@ public class UserTests extends BaseTest {
     @Test(priority = 8, description = "Verify that a user can be deleted successfully using DELETE /users/{id}.")
     public void verifyDeleteUserById() {
 
-        int userId = Integer.parseInt(configReader.getProperty("userId"));
+        int userId = ConfigReader.getIntProperty("userId");
+        // 🧭 Debugging print statements
+        System.out.println("🧭 Base URI currently set to: " + io.restassured.RestAssured.baseURI);
+        System.out.println("🧭 DELETE endpoint from Routes: " + Routes.delete_userById);
+        System.out.println("🧭 Path param 'id' being used: " + userId);
+
+        // 🧪 Execute DELETE request
 
         Response response =
                 given()

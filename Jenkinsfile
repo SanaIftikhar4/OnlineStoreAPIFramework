@@ -1,45 +1,73 @@
 pipeline {
-    agent any
+    agent any  // Runs on any available Jenkins agent
 
     tools {
-        jdk 'Java'            // matches the JDK name configured in Jenkins
-        allure 'Allure'       // matches the Allure Commandline name you added in Jenkins Tools
+        jdk 'JDK_21'        // Predefined tool names from Global Tool Configuration
+        gradle 'Gradle_8'
+    }
+
+    environment {
+        ALLURE_RESULTS = 'build/allure-results'
+        ALLURE_REPORT  = 'build/allure-report'
     }
 
     stages {
-        stage('Checkout') {
+
+        stage('Checkout from GitHub') {
             steps {
-                git branch: 'master', url: 'https://github.com/SanaIftikhar4/OnlineStoreAPIFramework.git'
+                echo '🔄 Checking out source code from GitHub...'
+                checkout scm
             }
         }
 
-        stage('Build & Test') {
+        stage('Build Project') {
             steps {
-                bat 'gradlew clean test --no-daemon'
+                echo '🏗️ Building Gradle project (skipping tests)...'
+                bat './gradlew clean build -x test'
             }
         }
 
-        stage('Allure Report') {
+        stage('Run API Tests') {
             steps {
-                // Publish the Allure results
+                echo '🧪 Running API test suite with TestNG...'
+                bat './gradlew clean test --no-daemon'
+            }
+            post {
+                always {
+                    echo '📦 Archiving Allure test results...'
+                    archiveArtifacts artifacts: "${ALLURE_RESULTS}/**", allowEmptyArchive: true
+                }
+            }
+        }
+
+        stage('Generate Allure Report') {
+            steps {
+                echo '📊 Generating Allure HTML report...'
+                bat './gradlew allureReport'
+            }
+        }
+
+        stage('Publish Allure Report in Jenkins') {
+            steps {
+                echo '🚀 Publishing Allure Report to Jenkins dashboard...'
                 allure([
                     includeProperties: false,
                     jdk: '',
-                    results: [[path: 'build/allure-results']]
+                    results: [[path: "${ALLURE_RESULTS}"]]
                 ])
-            }
-        }
-
-        stage('Archive Results') {
-            steps {
-                archiveArtifacts artifacts: 'build/reports/**/*.*', allowEmptyArchive: true
             }
         }
     }
 
     post {
+        success {
+            echo '✅ Build & Test Successful!'
+        }
+        failure {
+            echo '❌ Build Failed — Check logs and Allure Report for details.'
+        }
         always {
-            echo '✅ Pipeline completed. Cleaning up workspace...'
+            echo '🧹 Cleaning workspace after build...'
             cleanWs()
         }
     }

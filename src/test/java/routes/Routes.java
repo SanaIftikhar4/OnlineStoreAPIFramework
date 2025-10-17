@@ -4,8 +4,7 @@ import utils.ConfigReader;
 
 public class Routes {
 
-    //public static final String base_URL = "https://fakestoreapi.com/";
-    public static final String base_URL = ConfigReader.getProperty("baseURI");
+
 
     //------------------------Products-----------------------
 
