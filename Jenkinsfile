@@ -1,9 +1,9 @@
 pipeline {
-    agent any  // Runs on any available Jenkins agent
+    agent any
 
     tools {
-        jdk 'JDK_21'        // Predefined tool names from Global Tool Configuration
-        gradle 'Gradle_8'
+        jdk 'Java'        // Use the exact name from Global Tool Configuration
+        gradle 'Gradle'   // Use the exact name from Global Tool Configuration
     }
 
     environment {
@@ -12,7 +12,6 @@ pipeline {
     }
 
     stages {
-
         stage('Checkout from GitHub') {
             steps {
                 echo '🔄 Checking out source code from GitHub...'
